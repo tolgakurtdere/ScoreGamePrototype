@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,12 +10,15 @@ public class BallControl : MonoBehaviour
     public BallTrajectory ballTrajectory;
     private Vector3 ballDir;
     private int ballPower = 50;
-    private float initBallSpeed;
+    //private float initBallSpeed;
 
     private GameObject mainCamera;
     public GameObject ballCamera;
-
     public GameObject simulationBall;
+
+    public TextMeshProUGUI goalTMP;
+    public GameObject nextLevelButton;
+
     private void Awake()
     {
         ball = GetComponent<Rigidbody>();
@@ -25,25 +29,17 @@ public class BallControl : MonoBehaviour
         ballTrajectory.copyAllObstacles();
     }
 
-    void Update()
-    {
-
-    }
-
     private void OnMouseDrag()
     {
         ballDir = (this.transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition)).normalized;
-        //ballDir = new Vector3(ballDir.x, 0.05f, ballDir.z);
         ballTrajectory.predict(simulationBall, this.transform.position, ballDir * ballPower); //simulate the trajectory
     }
 
     private void OnMouseUp()
     {
         ball.velocity = ballDir * ballPower;
-        //ball.AddForce(ballDir * ballPower); //ball move
 
         ChangeCamera();
-        initBallSpeed = ball.velocity.magnitude;
 
         ballTrajectory.clearPrediction(); //delete the trajectory
     }
@@ -52,17 +48,7 @@ public class BallControl : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Goal"))
         {
-            Debug.Log("GOALLLLL");
             Goal();
-        }
-
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag.Equals("Block"))
-        {
-            //ball.velocity = ball.velocity.normalized * initBallSpeed; //when collide with blocks, move with same speed
         }
 
     }
@@ -75,6 +61,8 @@ public class BallControl : MonoBehaviour
 
     private void Goal()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //next level
+        goalTMP.gameObject.SetActive(true);
+        nextLevelButton.SetActive(true);
     }
+
 }

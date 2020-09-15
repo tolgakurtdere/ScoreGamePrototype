@@ -51,6 +51,7 @@ public class BallTrajectory : MonoBehaviour
                 GameObject fakeT = Instantiate(t.gameObject);
                 fakeT.transform.position = t.position;
                 fakeT.transform.rotation = t.rotation;
+                fakeT.name = t.name + "Temp";
                 Renderer fakeR = fakeT.GetComponent<Renderer>();
                 if (fakeR)
                 {
